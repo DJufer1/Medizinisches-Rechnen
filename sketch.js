@@ -586,8 +586,8 @@ oxygen_content: {
                   {
                     scenario: "Prüfen des Sauerstoffvorrats vor einem Einsatz.",
                     generate: () => {
-                        const flaschenvolumenL = random([5, 10]); // Typische Grössen
-                        const druckBar = random([100, 150, 180, 200]); // Typische Drücke
+                        const flaschenvolumenL = random([5, 10]); // NEU: Einfache Grössen
+                        const druckBar = random([100, 150, 200]); // NEU: Einfache Drücke
                         const inhaltL = flaschenvolumenL * druckBar;
                         return {
                             question: `Eine <strong>${flaschenvolumenL} L</strong> O2-Flasche zeigt <strong>${druckBar} bar</strong> Druck.<br>Wie viele Liter O2 sind (ca.) verfügbar?`,
@@ -600,8 +600,8 @@ oxygen_content: {
                  {
                     scenario: "Dokumentation des Flascheninhalts.",
                      generate: () => {
-                        const flaschenvolumenL = 2; // Kleine Flasche
-                        const druckBar = random([80, 100, 120, 150]);
+                        const flaschenvolumenL = random([2, 5]); // NEU: Vollständig zufällig mit einfachen Zahlen
+                        const druckBar = random([80, 100, 120]); // NEU: Einfache Zahlen für Kopfrechnung
                         const inhaltL = flaschenvolumenL * druckBar;
                         return {
                             question: `Eine kleine <strong>${flaschenvolumenL} L</strong> O2-Flasche hat einen Druck von <strong>${druckBar} bar</strong>.<br>Berechnen Sie den ungefähren Inhalt in Litern.`,
@@ -616,12 +616,11 @@ oxygen_content: {
                   {
                     scenario: "Berechnung des *verbleibenden nutzbaren* Sauerstoffs.",
                     generate: () => {
-                        const flaschenvolumenL = random([5, 10]);
-                        const druckBar = random([70, 100, 130, 160]);
-                        const restdruckBar = 10; // Üblicher minimaler Restdruck
-                        // Nur nutzbar über Restdruck
+                        const flaschenvolumenL = random([5, 10, 12]); // NEU: Etwas komplexere Werte
+                        const druckBar = random([75, 110, 135, 160]); // NEU: Ungerade Werte
+                        const restdruckBar = 10;
                         const nutzbarerDruck = druckBar - restdruckBar;
-                        const nutzbarerInhaltL = Math.max(0, flaschenvolumenL * nutzbarerDruck); // Verhindert negative Ergebnisse
+                        const nutzbarerInhaltL = Math.max(0, flaschenvolumenL * nutzbarerDruck);
                         return {
                             question: `Eine <strong>${flaschenvolumenL} L</strong> O2-Flasche zeigt <strong>${druckBar} bar</strong>.<br>Wie viele Liter O2 können Sie noch entnehmen, wenn ein Restdruck von ${restdruckBar} bar benötigt wird?`,
                             answer: nutzbarerInhaltL,
@@ -633,15 +632,14 @@ oxygen_content: {
                   {
                     scenario: "Mindestdruck für benötigte Menge ermitteln.",
                     generate: () => {
-                        const flaschenvolumenL = 10;
-                        const benoetigtL = random([800, 1000, 1200, 1500]);
-                        // Druck (bar) = Inhalt (L) / Flaschenvolumen (L)
-                        const minDruckBar = Math.ceil(benoetigtL / flaschenvolumenL); // Aufrunden für Sicherheit
+                        const flaschenvolumenL = random([5, 10, 12, 15]); // NEU: Vollständig zufällig
+                        const benoetigtL = random([800, 1000, 1250, 1500]);
+                        const minDruckBar = Math.ceil(benoetigtL / flaschenvolumenL);
                          return {
                             question: `Sie benötigen mindestens <strong>${benoetigtL} L</strong> Sauerstoff für einen Transport.<br>Sie verwenden eine <strong>${flaschenvolumenL} L</strong> Flasche.<br>Welchen Mindestdruck (in bar) muss das Manometer anzeigen?`,
                             answer: minDruckBar,
                             solution: `Benötigter Druck = ${benoetigtL} L / ${flaschenvolumenL} L = ${roundToDecimal(benoetigtL/flaschenvolumenL,1)} bar<br>Mindestdruck (aufgerundet): <strong>${minDruckBar} bar</strong>`,
-                            unit: 'bar' // Antwort ist Druck
+                            unit: 'bar'
                          };
                     }
                   }
@@ -649,15 +647,15 @@ oxygen_content: {
          }
     },
 oxygen_duration: {
-         name: "O2 Dauer", unit: "Minuten", // Standard-Einheit, kann in Aufgabe überschrieben werden
+         name: "O2 Dauer", unit: "Minuten",
          levels: {
              grundlagen: [
                  {
                     scenario: "Schnelle Abschätzung der O2-Reichweite.",
                     generate: () => {
-                        const inhaltL = random([600, 800, 1000, 1200]); // Gegebener Inhalt
-                        const flussrateLM = random([2, 4, 5, 10]); // Einfache Raten
-                        const dauerMin = Math.floor(inhaltL / flussrateLM); // Abrunden für Sicherheit
+                        const inhaltL = random([600, 800, 1000, 1200]);
+                        const flussrateLM = random([2, 4, 5, 10]);
+                        const dauerMin = Math.floor(inhaltL / flussrateLM);
                         return {
                             question: `Sie haben ca. <strong>${inhaltL} L</strong> Sauerstoff verfügbar.<br>Die Flussrate ist auf <strong>${flussrateLM} L/min</strong> eingestellt.<br>Wie viele Minuten reicht der Vorrat ungefähr?`,
                             answer: dauerMin,
@@ -669,15 +667,15 @@ oxygen_duration: {
                  {
                     scenario: "Berechnung für eine kurze O2-Gabe.",
                      generate: () => {
-                        const flaschenvolumenL = 2;
-                        const druckBar = 100;
-                        const inhaltL = flaschenvolumenL * druckBar; // 200 L
-                        const flussrateLM = random([2, 4, 5]);
+                        const flaschenvolumenL = random([2, 5]);      // NEU: Vollständig zufällig
+                        const druckBar = random([100, 120, 150]); // NEU: Vollständig zufällig
+                        const inhaltL = flaschenvolumenL * druckBar;
+                        const flussrateLM = random([2, 4, 5, 10]);     // NEU: Etwas mehr Varianz
                         const dauerMin = Math.floor(inhaltL / flussrateLM);
                         return {
                             question: `Eine <strong>${flaschenvolumenL} L</strong> Flasche mit <strong>${druckBar} bar</strong> (${inhaltL} L Inhalt) wird verwendet.<br>Flussrate: <strong>${flussrateLM} L/min</strong>.<br>Berechnen Sie die ungefähre Dauer in Minuten.`,
                             answer: dauerMin,
-                            solution: `Dauer = ${inhaltL} L / ${flussrateLM} L/min = <strong>${dauerMin} min</strong> (abgerundet)`,
+                            solution: `Inhalt: ${flaschenvolumenL}L &times; ${druckBar}bar = ${inhaltL}L<br>Dauer = ${inhaltL} L / ${flussrateLM} L/min = <strong>${dauerMin} min</strong> (abgerundet)`,
                             unit: 'min'
                         };
                     }
@@ -687,47 +685,46 @@ oxygen_duration: {
                  {
                     scenario: "O2 für einen längeren Transport planen (Stunden & Minuten).",
                     generate: () => {
-                        const flaschenvolumenL = 10;
-                        const druckBar = random([120, 150, 180]);
-                        const flussrateLM = random([3, 4, 6, 8]);
+                        const flaschenvolumenL = random([10, 12, 15]); // NEU: Vollständig zufällig
+                        const druckBar = random([120, 150, 180, 195]); // NEU: Komplexere Werte
+                        const flussrateLM = random([3, 4, 6, 7, 8]);
                         const inhaltL = flaschenvolumenL * druckBar;
                         const dauerMin_exact = inhaltL / flussrateLM;
-                        const dauerMin_safe = Math.floor(dauerMin_exact); // Abrunden
+                        const dauerMin_safe = Math.floor(dauerMin_exact);
                         const hours = Math.floor(dauerMin_safe / 60);
                         const minutes = dauerMin_safe % 60;
                         const dauerFormatted = `${hours}h ${minutes}min`;
                         return {
-                            question: `Eine <strong>${flaschenvolumenL} L</strong> Flasche hat <strong>${druckBar} bar</strong> Druck.<br>Die Flussrate beträgt <strong>${flussrateLM} L/min</strong>.<br>Wie lange reicht der Sauerstoff (in Stunden und Minuten)?`,
-                            answer: dauerMin_safe, // Antwort in Minuten, zur einfachen Überprüfung
+                            question: `Eine <strong>${flaschenvolumenL} L</strong> Flasche hat <strong>${druckBar} bar</strong> Druck.<br>Die Flussrate beträgt <strong>${flussrateLM} L/min</strong>.<br>Wie lange reicht der Sauerstoff (Antwort in Minuten)?`,
+                            answer: dauerMin_safe,
                             solution: `Inhalt: ${flaschenvolumenL}L * ${druckBar}bar = ${inhaltL} L<br>Dauer: ${inhaltL}L / ${flussrateLM}L/min = ${dauerMin_exact.toFixed(1)} min<br>Abgerundet: <strong>${dauerMin_safe} min</strong><br>Das entspricht: <strong>${dauerFormatted}</strong>`,
-                            unit: 'min' // Primäre Antwort-Einheit
+                            unit: 'min'
                         };
                     }
                  },
                  {
                      scenario: "Maximale Flussrate für geplante Dauer.",
                      generate: () => {
-                         const flaschenvolumenL = 5;
-                         const druckBar = random([100, 150]);
+                         const flaschenvolumenL = random([5, 10, 12]); // NEU: Vollständig zufällig
+                         const druckBar = random([100, 130, 155]); // NEU: Komplexere Werte
                          const inhaltL = flaschenvolumenL * druckBar;
-                         const dauerMin = random([60, 90, 120]); // Dauer in Minuten
-                         // Fluss (L/min) = Inhalt (L) / Dauer (min)
+                         const dauerMin = random([60, 90, 120, 180]);
                          const maxFlussLM = roundToDecimal(inhaltL / dauerMin, 1);
                          return {
                              question: `Sie haben eine <strong>${flaschenvolumenL} L</strong> Flasche mit <strong>${druckBar} bar</strong> (${inhaltL} L Inhalt).<br>Der Sauerstoff muss für <strong>${dauerMin} Minuten</strong> reichen.<br>Welche maximale Flussrate (L/min) können Sie einstellen?`,
                              answer: maxFlussLM,
                              solution: `Max. Flussrate = ${inhaltL} L / ${dauerMin} min = <strong>${maxFlussLM} L/min</strong>`,
-                             unit: 'L/min' // Antwort ist Flussrate
+                             unit: 'L/min'
                          };
                      }
                  },
                  {
                     scenario: "Dauer unter Berücksichtigung des Restdrucks.",
                     generate: () => {
-                        const flaschenvolumenL = 10;
-                        const druckBar = random([80, 110, 140]);
+                        const flaschenvolumenL = random([10, 12, 15]); // NEU: Vollständig zufällig
+                        const druckBar = random([85, 115, 140]); // NEU: Komplexere Werte
                         const restdruckBar = 10;
-                        const flussrateLM = random([4, 5, 7]);
+                        const flussrateLM = random([4, 5, 7, 9]);
                         const nutzbarerInhaltL = Math.max(0, flaschenvolumenL * (druckBar - restdruckBar));
                         const dauerMin = Math.floor(nutzbarerInhaltL / flussrateLM);
                         const hours = Math.floor(dauerMin / 60);
